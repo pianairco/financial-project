@@ -1,0 +1,33 @@
+logging.config: classpath:log4j2-spring.yaml
+
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+iso:
+  channel-info:
+    name: shetab-7-ascii-channel-v93
+    iso-channel-type: ascii
+    ascii-header-detail:
+      iso-header-type: variable
+      len-digits: 4
+#      iso-header-type: not-separated-from-the-message
+    ascii-detail:
+      total-len-digits: 4
+
+  server-info:
+    port: 20201
+#    socketConnectionType: one-time
+    socketConnectionType: after-idle-timeout
+    durationInMillis: 10000
+    match-key-provider-bean: shetab-7-match-key-provider
+    channel-name: shetab-7-ascii-channel-v93
+    packager-type: shetab-7-ascii-v93
+    #    packager-type: binary-v87
+    message-handler-bean: shetab-7-message-handler
+    response-header-provide-type: provide-from-handler
+    header-provider-bean: shetab-7-iso-header-provider
+    header-processor-bean: shetab-7-iso-header-processor
+
+#    handler-bean: shetab-7-payload-handler
+    logHexInOut: true

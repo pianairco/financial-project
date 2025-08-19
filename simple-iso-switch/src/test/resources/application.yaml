@@ -1,0 +1,15 @@
+iso:
+  channel-info:
+    name: shetab-7-ascii-channel-v93
+    iso-channel-type: ascii
+    ascii-header-detail:
+      iso-header-type: not-separated-from-the-message
+    ascii-detail:
+      total-len-digits: 4
+
+  server:
+    port: 20201
+    channel: shetab-7-ascii-channel-v93
+    packager-type: shetab-7-ascii-v87
+    #    packager-type: binary-v87
+    handler-bean: shetab-7-handler

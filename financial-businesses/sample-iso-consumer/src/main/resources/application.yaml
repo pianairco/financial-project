@@ -1,0 +1,75 @@
+spring:
+  application:
+    name: financial-project
+
+
+  channel2:
+    isoChannelType: ascii
+    ascii-detail:
+      len-digit: 4
+      right-padded: false
+
+iso:
+  channels:
+    - name: channel-1
+      iso-channel-type: binary
+      binary-header-detail:
+#        isoHeaderType: none | fix | variable
+        iso-header-type: fix
+        bytes: 2
+
+#        iso-header-type: variable
+#        len-bytes: 2
+
+#        iso-header-type: none
+
+        binary-detail:
+          len-bytes-arranged: hsb
+          total-len-bytes: 2
+
+    - name: channel-2
+      iso-channel-type: ascii
+      ascii-header-detail:
+        iso-header-type: variable
+        len-digits: 4
+#        len-left-padded: true
+
+      ascii-detail:
+        total-len-digits: 4
+#        len-left-padded: true
+
+
+
+  server:
+    port: 20201
+    channel-type: binary-channel
+    packager-type: shetab-7-ascii-v93
+#    packager-type: binary-v87
+    distributions:
+      defaults:
+        message-broker: nats
+        broker-name: main
+        stream: bajet
+      conditionals:
+        - message-broker: nats
+          broker-name: main
+          stream: bajet
+          conditions:
+            mti: "0200"
+            iso-field-map-to-conditions:
+              "3": "000012"
+
+message-brokers:
+  nats:
+    - name: main
+      port: 4222
+      host: "127.0.0.1"
+      jetStreams:
+        - name: "bajet"
+          subjects: "financial.request.bajet"
+          as-publisher: false
+          as-subscriber: true
+          mode: 'request-reply'
+          durableName: bajet-one
+          handlerBeanName: consumer-1
+          auto-ack: true

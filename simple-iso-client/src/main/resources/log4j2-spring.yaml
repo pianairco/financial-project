@@ -1,0 +1,56 @@
+Configuration:
+  packages: ir.piana.financial.commons.log
+  status: warn
+  monitorInterval: 30
+  properties:
+    property:
+      - name: LOG_PATTERN
+        value: "%d{MMdd-HH:mm:ss.SSS} [%-10.10t] {%-5level} %pqcn{1.}:%L - %msg%n"
+      - name: CONSOLE_LOG_PATTERN
+        value: "%d{MM/dd} %style{%d{HH:mm:ss.SSS}}{magenta} [%-10.10t] %highlight{%-5level}{FATAL=red,ERROR=red,WARN=yellow,INFO=green,DEBUG=blue,TRACE=cyan} %style{%pqcn{1.}}{yellow}:%L - %msg%n"
+      - name: LOG_PATH
+        value: "logs"
+      - name: LOG_FILE_NAME
+        value: "app.log"
+
+  Appenders:
+    Console:
+      name: Console
+      PatternLayout:
+        disableAnsi: false
+        pattern: ${CONSOLE_LOG_PATTERN}
+
+    RollingFile:
+      - name: RollingFile
+        fileName: ${LOG_PATH}/${LOG_FILE_NAME}
+        filePattern: "${LOG_PATH}/$${date:yyyy-MM-dd}/time(%d{HH-mm-ss-SSS}).log.gz"
+#        filePattern: "${LOG_PATH}/$${date:yyyy-MM-dd}/app-%d{HH-mm-ss-SSS}-%i.log.gz"
+        PatternLayout:
+          pattern: ${LOG_PATTERN}
+        Policies:
+          SizeBasedTriggeringPolicy:
+            size: "10MB"
+          TimeBasedTriggeringPolicy:
+            interval: 86400
+            modulate: true
+        DefaultRolloverStrategy:
+          max: 10
+
+  Loggers:
+    Root:
+      level: info
+      AppenderRef:
+        - ref: Console
+        - ref: RollingFile
+
+    Logger:
+      - name: ir.piana
+        level: debug
+        additivity: false
+        AppenderRef:
+          - ref: Console
+          - ref: RollingFile
+      - name: org.springframework
+        level: warn
+      - name: org.hibernate
+        level: warn
